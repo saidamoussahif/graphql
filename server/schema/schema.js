@@ -1,7 +1,7 @@
 // const Project = require('../models/Project');
 const Item = require("../models/Item");
-const mongoose = require ('mongoose');
-mongoose.set('strictQuery', false);
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 
 const {
   GraphQLObjectType,
@@ -12,7 +12,6 @@ const {
   GraphQLNonNull,
   //   GraphQLNonNull
 } = require("graphql");
-
 
 // Item type
 const ItemType = new GraphQLObjectType({
@@ -83,17 +82,51 @@ const mutation = new GraphQLObjectType({
       },
     },
 
-    // Delete client 
+    // Delete client
     deleteItem: {
-      type:ItemType,
-      args:{
-        id:{type: GraphQLNonNull(GraphQLID) },
+      type: ItemType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args){
-        return Item.findByIdAndRemove(args.id)
-      }
+      resolve(parent, args) {
+        return Item.findByIdAndRemove(args.id);
+      },
     },
 
+    // update item
+    UpdateItem: {
+      type: ItemType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        Brand_name: { type: GraphQLString },
+        IPR: { type: GraphQLString },
+        Designation: { type: GraphQLString },
+        Status: { type: GraphQLString },
+        Number: { type: GraphQLString },
+        Office: { type: GraphQLString },
+        Nice: { type: GraphQLString },
+        Nice_classification: { type: GraphQLString },
+        Owner: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Item.findByIdAndUpdate(
+          args.id,
+          {
+            $set:{
+              Brand_name: args.Brand_name,
+              IPR: args.IPR,
+              Designation: args.Designation,
+              Status: args.Status,
+              Number: args.Number,
+              Office: args.Office,
+              Nice: args.Nice,
+              Nice_classification: args.Nice_classification,
+              Owner: args.Owner
+            }
+          }
+          );
+      },
+    },
   },
 });
 
